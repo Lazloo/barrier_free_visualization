@@ -12,11 +12,13 @@ import matplotlib.pyplot as plt
 
 
 def get_palette():
-    N = np.random.random_integers(2, 255)
+    N = np.random.randint(2, 253 + 1)
     # HSV_tuples = [(x * 1.0 / (N - 1), 0.5, 0.8) for x in range(N)]  # 0 ... red, 0.333 .... green, 0.6666 ... blue
     # HSV_tuples = [(x * 1.0 / (N - 1) / 3 * 2, 0.75, 0.6) for x in range(N)]  # 0 ... red, 0.333 .... green, 0.6666 ... blue
     HSV_tuples = [tuple(np.random.uniform(size=3)) for i in range(N)]
     RGB_tuples = list(map(lambda x: colorsys.hsv_to_rgb(*x), HSV_tuples))
+    RGB_tuples.append((0, 0, 0))
+    RGB_tuples.append((1, 1, 1))
     return RGB_tuples
 
 
@@ -45,7 +47,7 @@ def QuantizeToGivenPalette(im, palette):
 im = Image.open('data/1.jpg').convert('RGB')
 
 rgb_list = []
-for i in tqdm(range(0, 1000)):
+for i in tqdm(range(0, 10000)):
     RGB_tuples = get_palette()
     inPalette = [int(i * 255) for i in list(reduce(operator.add, RGB_tuples))]
     newPalette = [int(i * 255) for i in list(reduce(operator.add, RGB_tuples))]
@@ -55,7 +57,8 @@ for i in tqdm(range(0, 1000)):
     # Save result
     r.save('test/result' + str(i) + '.png')
 
-
+with open("file.txt", "w") as output:
+    output.write(str(rgb_list))
 #
 # p = [i / 255.0 for i in r.getpalette()]
 # p = np.array(p).reshape(int(len(p) / 3), 3)
